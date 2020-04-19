@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request  # 滙入 request
 import json
+import modules.functions
 
 # __name__ 用來 application 的相對位置
 # 若是直接啟動的程式 __name__ 為 '__main__'
@@ -29,3 +30,9 @@ def save_headers():
     file1 = open('headers.json', 'w')
     file1.write(json.dumps(dict1))  # 存成 JSON
     return dict1
+
+
+# 語法：add_url_rule(rule, endpoint=None, view_func=None, provide_automatic_options=None, **options)
+app.add_url_rule('/show-cookies', 'show-cookies', modules.functions.show_cookies)
+# app.add_url_rule('/show-cookies', 'show-cookies')
+# app.view_functions['show-cookies'] = modules.functions.show_cookies
