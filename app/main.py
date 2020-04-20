@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import request  # 滙入 request
+from flask import render_template
 import json
 import modules.functions
 
@@ -36,3 +37,15 @@ def save_headers():
 app.add_url_rule('/show-cookies', 'show-cookies', modules.functions.show_cookies)
 # app.add_url_rule('/show-cookies', 'show-cookies')
 # app.view_functions['show-cookies'] = modules.functions.show_cookies
+
+@app.route('/basic-template')
+def basic_template():
+    return render_template('basic.html', name='是在哈囉', age=25)
+
+@app.route('/basic-template2')
+def basic_template2():
+    output = {
+        'name': '小明',
+        'age': 30
+    }
+    return render_template('basic.html', ** output)
