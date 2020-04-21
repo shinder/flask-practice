@@ -1,4 +1,7 @@
-.idea
-venv
+/.idea
+/.vscode
+/venv
+/headers.json
+__pycache__
 
 

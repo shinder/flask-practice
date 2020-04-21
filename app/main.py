@@ -49,3 +49,38 @@ def basic_template2():
         'age': 30
     }
     return render_template('basic.html', ** output)
+
+
+@app.route('/try-qs')
+def queryString():
+    # query string 轉成 dict
+    # http://localhost:5000/try-qs?a[]=1&b=34&a[]=5
+    output = {
+        'args': request.args,
+        'a[]': request.args.getlist('a[]'),
+        'get_b': request.args.get('b'), 
+        'get_a[]': request.args.get('a[]'), 
+    }
+    return output 
+
+@app.route('/try-post', methods=['POST'])  # 限定使用 POST
+def try_post():
+    # 表單資料 urlencoded, form-data 皆可, 使用 postman 測試
+    output = {
+        'form': request.form,
+        'a[]': request.form.getlist('a[]'),
+        'post_b': request.form.get('b'), 
+        'post_a[]': request.form.get('a[]'), 
+    }
+    return output
+    
+@app.route('/try-post2', methods=['POST'])
+def try_post2():
+    # 使用 postman post json 資料: {"a":11,"b":22}
+    output = {
+        'content_type': request.content_type,
+        'data': request.data.decode('utf-8'),
+        'json': request.get_json(),
+    }
+    return output
+
