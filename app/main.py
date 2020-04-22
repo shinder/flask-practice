@@ -1,7 +1,10 @@
 from flask import Flask
 from flask import request  # 滙入 request
 from flask import render_template
+from flask import session
+from datetime import timedelta
 import json
+import os
 import modules.functions
 
 # __name__ 用來 application 的相對位置
@@ -9,6 +12,8 @@ import modules.functions
 # 若是被滙入， __name__ 會是被滙入的名稱
 app = Flask(__name__, '/')
 
+app.config['SECRET_KEY'] = os.urandom(24)
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
 
 # decorators 後面定義的 function 會變成 decorators 的參數
 # 類似 JavaScript 的 callback function
@@ -83,4 +88,22 @@ def try_post2():
         'json': request.get_json(),
     }
     return output
+
+@app.route('/params/')
+@app.route('/params/<action>/')
+@app.route('/params/<action>/<int:id>')
+def my_params(action='none', id=0):
+    return ( {
+        'action': action,
+        'id': id
+    } )
+
+
+@app.route('/try-session')
+def try_session():
+    if not session.get('what'):
+        session['what'] = 1
+    else:
+        session['what'] += 1
+    return str( session.get('what') )
 
