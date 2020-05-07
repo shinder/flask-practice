@@ -10,7 +10,12 @@ import modules.functions
 # __name__ 用來 application 的相對位置
 # 若是直接啟動的程式 __name__ 為 '__main__'
 # 若是被滙入， __name__ 會是被滙入的名稱
-app = Flask(__name__, '/')
+app = Flask(
+    __name__, 
+    static_url_path = '/',
+    static_folder = './static',
+    template_folder ='./templates'
+    )
 
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=60)
