@@ -1,11 +1,9 @@
-from flask import Flask
-from flask import request  # 滙入 request
-from flask import render_template
-from flask import session
+from flask import Flask, request, render_template, session
 from datetime import timedelta
 import json
 import os
 import modules.functions
+import modules.mysql_connection
 
 # __name__ 用來 application 的相對位置
 # 若是直接啟動的程式 __name__ 為 '__main__'
@@ -112,3 +110,9 @@ def try_session():
         session['what'] += 1
     return str( session.get('what') )
 
+@app.route('/try-mysql2')
+def tryMysql2():
+    cursor = modules.mysql_connection.get_cursor()
+    sql = ("SELECT `name`, `email` FROM address_book")
+    cursor.execute(sql)
+    return render_template('data_table.html', t_data=cursor.fetchall())
