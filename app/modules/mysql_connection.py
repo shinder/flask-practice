@@ -17,4 +17,5 @@ def get_connection():
         return cnx
 
 def get_cursor():
-    return get_connection().cursor(dictionary=True)  # 讀出資料使用 dict，預設為 tuple
+    cursor = get_connection().cursor(dictionary=True)  # 讀出資料使用 dict，預設為 tuple
+    return (cursor, get_connection())  # 同時回傳 cursor 和 connection

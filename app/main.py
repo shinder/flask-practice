@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, session
+from flask import Flask, request, render_template, session, jsonify
 from datetime import timedelta
 import json
 import os
@@ -110,9 +110,47 @@ def try_session():
         session['what'] += 1
     return str( session.get('what') )
 
-@app.route('/try-mysql2')
-def tryMysql2():
-    cursor = modules.mysql_connection.get_cursor()
-    sql = ("SELECT `name`, `email` FROM address_book")
+@app.route('/try-mysql')
+def try_mysql():
+    (cursor, cnx) = modules.mysql_connection.get_cursor()
+    sql = ("SELECT * FROM address_book")
     cursor.execute(sql)
     return render_template('data_table.html', t_data=cursor.fetchall())
+
+@app.route('/try-mysql2')
+def try_mysql2():
+    (cursor, cnx) = modules.mysql_connection.get_cursor()
+    sql = ("SELECT * FROM address_book")
+    cursor.execute(sql)
+    return jsonify(cursor.fetchall())
+
+@app.route('/receive-json', methods=['POST'])
+def receive_json():
+    (cursor, cnx) = modules.mysql_connection.get_cursor()
+    data = json.loads(request.get_data())  # JSON 字串轉換為 dict
+    p = {}
+    sids = []  # 用來記錄新增的 primary key
+    p['name'] = data['name'] if 'name' in data else ''
+    p['email'] = data['email'] if 'email' in data else ''
+    p['mobile'] = data['mobile'] if 'mobile' in data else ''
+    p['birthday'] = data['birthday'] if 'birthday' in data else '1900-01-01'
+    p['address'] = data['address'] if 'address' in data else ''
+
+    # 兩種作法
+    sql1 = ("INSERT INTO `address_book`"
+        "(`name`, `email`, `mobile`, `birthday`, `address`, `created_at`"
+        ") VALUES (%s, %s, %s, %s, %s, NOW())")
+    sql2 = ("INSERT INTO `address_book`"
+        "(`name`, `email`, `mobile`, `birthday`, `address`, `created_at`"
+        ") VALUES (%(name)s, %(email)s, %(mobile)s, %(birthday)s, %(address)s, NOW())")
+
+    cursor.execute(sql1, (p['name'], p['email'], p['mobile'], p['birthday'], p['address']))
+    sids.append(cursor.lastrowid)  # 取得新增項目的 primary key
+    cursor.execute(sql2, p)  # 使用 dict
+    sids.append(cursor.lastrowid)
+    cnx.commit()  # 提交新增的資料才會生效
+
+    return jsonify(sids)  # 輸出 JSON 格式
+
+
+  
