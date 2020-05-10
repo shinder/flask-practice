@@ -124,9 +124,3 @@ def ab_delete(_id):
         return redirect("/address-book/list/1", code=302)
     else:
         return redirect(referer, code=302)
-    # if not row:
-    #     return redirect("/address-book/list/1", code=302)
-    # else:
-    #     row['page_name'] = 'ab_edit'
-    #     row['page_title'] = '修改 - 通訊錄'
-    #     return render_template('address-book/edit.html', **row)
