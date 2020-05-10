@@ -6,6 +6,7 @@ import modules.mongo_connection
 def ab_list(page=1):
     (db, connection) = modules.mongo_connection.getDB('test')
     output = {
+        'page_name': 'ab-list',
         'totalRows': 0,   # 總筆數
         'perPage': 3,     # 每一頁最多幾筆
         'totalPages': 0,  # 總頁數
@@ -28,7 +29,7 @@ def ab_list(page=1):
         for doc in cursor:
             doc['_id'] = str(doc['_id'])
             output['rows'].append(doc)
-    return output
+    return render_template('address-book/list.html', **output)
 
 
 

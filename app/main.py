@@ -162,5 +162,5 @@ def try_mongo():
     one['_id'] = str(one['_id'])  # 將 ObjectId 轉換為字串顯示
     return one
 
-app.add_url_rule('/address-book/list/', None, modules.address_book.ab_list, methods=['POST'])
-app.add_url_rule('/address-book/list/<int:page>', None, modules.address_book.ab_list, methods=['POST'])
+app.add_url_rule('/address-book/list/', None, modules.address_book.ab_list)
+app.add_url_rule('/address-book/list/<int:page>', None, modules.address_book.ab_list)

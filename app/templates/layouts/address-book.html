@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/fontawesome/css/all.css">
+    <title>{% block title %}Document{% endblock %}</title>
+</head>
+
+<body>
+    {% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="/">Navbar</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item {{ 'active' if page_name=='ab-list' else '' }}">
+                        <a class="nav-link" href="/address-book/list">list</a>
+                    </li>
+                    <li class="nav-item {{ 'active' if page_name=='ab-add' else '' }}">
+                        <a class="nav-link" href="/address-book/add">add</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script src="/js/jquery-3.5.1.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+
+</html>
