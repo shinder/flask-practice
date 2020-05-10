@@ -3,5 +3,5 @@
 /venv
 /headers.json
 __pycache__
-
+.DS_Store
 
