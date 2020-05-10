@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="/fontawesome/css/all.css">
-    <title>{% block title %}Document{% endblock %}</title>
+    <title>{{ '通訊錄' if not page_title else page_title }}</title>
 </head>
 
 <body>

@@ -166,5 +166,7 @@ app.add_url_rule('/address-book/list/', None, modules.address_book.ab_list)
 app.add_url_rule('/address-book/list/<int:page>', None, modules.address_book.ab_list)
 app.add_url_rule('/address-book/edit/<_id>', None, modules.address_book.ab_edit_get, methods=['GET'])
 app.add_url_rule('/address-book/edit', None, modules.address_book.ab_edit_post, methods=['POST'])
+app.add_url_rule('/address-book/add', None, modules.address_book.ab_add_get, methods=['GET'])
+app.add_url_rule('/address-book/add', None, modules.address_book.ab_add_post, methods=['POST'])
 
 
