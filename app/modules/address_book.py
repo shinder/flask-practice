@@ -32,7 +32,6 @@ def ab_list(page=1):
                         limit=output['perPage']
                     )
         for doc in cursor:
-            print(doc)
             doc['_id'] = str(doc['_id'])
             output['rows'].append(doc)
     return render_template('address-book/list.html', **output)
@@ -104,10 +103,30 @@ def ab_add_post():
     (db, connection) = modules.mongo_connection.getDB('test')
     doc = request.form.to_dict()
     rr = db.address_book.insert_one(doc)
-    print(dir(rr))  # InsertOneResult
+    # print(dir(rr))  # InsertOneResult
     if rr.inserted_id:
         output['success'] = True
     else:
         output['error'] = '資料沒有新增';
     return output
  
+def ab_delete(_id):
+    (db, connection) = modules.mongo_connection.getDB('test')
+    try:
+        oid = ObjectId(_id)
+    except:
+        return redirect("/address-book/list/1", code=302)
+
+    rr = db.address_book.delete_one({'_id': oid})
+    # print(dir(rr))  # DeleteResult
+    referer = request.headers.get('referer')
+    if not referer:
+        return redirect("/address-book/list/1", code=302)
+    else:
+        return redirect(referer, code=302)
+    # if not row:
+    #     return redirect("/address-book/list/1", code=302)
+    # else:
+    #     row['page_name'] = 'ab_edit'
+    #     row['page_title'] = '修改 - 通訊錄'
+    #     return render_template('address-book/edit.html', **row)
