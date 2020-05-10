@@ -1,6 +1,8 @@
-from flask import Flask, request, render_template, session, jsonify
+from flask import Flask, request, render_template, session, jsonify, redirect
+from bson.objectid import ObjectId
 import json
 import math
+import re
 import modules.mongo_connection
 
 def ab_list(page=1):
@@ -27,12 +29,52 @@ def ab_list(page=1):
                         limit=output['perPage']
                     )
         for doc in cursor:
+            print(doc)
             doc['_id'] = str(doc['_id'])
             output['rows'].append(doc)
     return render_template('address-book/list.html', **output)
 
+def ab_edit_get(_id):
+    (db, connection) = modules.mongo_connection.getDB('test')
+    try:
+        oid = ObjectId(_id)
+    except:
+        return redirect("/address-book/list/1", code=302)
 
+    row = db.address_book.find_one({'_id': oid})
+    row['_id'] = _id  # 使用字串
+    if not row:
+        return redirect("/address-book/list/1", code=302)
+    else:
+        return render_template('address-book/edit.html', **row)
 
+def ab_edit_post():
+    output = {
+        'success': False,
+        'error': '',
+    }
+    if len(request.form.get('name')) < 2:
+        output['error'] = '姓名字元長度太短'
+        return output
+
+    email_pattern = r"^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$"
+    email_match = re.search(email_pattern, request.form.get('email'), re.I)
+    if not email_match:
+        output['error'] = 'Email 格式錯誤'
+        return output
+
+    (db, connection) = modules.mongo_connection.getDB('test')
+    doc = request.form.to_dict()
+    _id = doc['_id']
+    del doc['_id']
+    rr = db.address_book.replace_one({'_id': ObjectId(_id)}, doc)
+    # print(rr) # pymongo.results.UpdateResult
+    if rr.modified_count==1:
+        output['success'] = True
+    else:
+        output['error'] = '資料沒有變更';
+
+    return output
 
 
 
