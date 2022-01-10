@@ -2,9 +2,10 @@ import mysql.connector
 
 connect_data = {
     'host': 'localhost',
-    'user': 'root',
-    'passwd': 'root',
-    'database': 'test'
+    'user': 'shinder',
+    'password': 'admin',
+    'database': 'test',
+    'auth_plugin': 'mysql_native_password'  # 新增連線用戶使用 mysql_native_password
 }
 cnx = None
 
